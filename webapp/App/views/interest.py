@@ -51,6 +51,11 @@ def create_interest():
     if len(available) != len(requested_ids):
         return _err("conflict", "The chosen spot is no longer available", 409)
 
+    # One active request per student: an assigned student (fulfilled request)
+    # cannot open a second request while still holding a spot.
+    if query_one("SELECT id FROM interest WHERE user_id = %s AND status = 'fulfilled'", (g.user["id"],)):
+        return _err("conflict", "You already have a parking spot assigned", 409)
+
     existing = query_one(
         "SELECT id FROM interest WHERE user_id = %s AND status = 'pending'", (g.user["id"],))
     connection = get_db()

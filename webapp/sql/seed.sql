@@ -57,12 +57,13 @@ SELECT 6, '17-' || g, CASE WHEN g = 2 THEN 'disabled' ELSE 'available' END FROM 
 INSERT INTO assignments (space_id, user_id, assigned_by, active)
 SELECT id, 2, 1, TRUE FROM spaces WHERE lot_id = 1 AND label = 'A8';
 
--- Interest: Alice already holds Lot 1; Bob and Alice both wait on Lot 4 (id 2),
--- so Manual Assign shows a real choice between two pending requests.
+-- Interest: Alice already holds Lot 1 (one active request per student, so she
+-- has no second row); Bob and Olivia both wait on Lot 4 (id 2), so Manual
+-- Assign shows a real choice between two pending requests.
 INSERT INTO interest (user_id, lot_id, status, created_at) VALUES
     (2, 1, 'fulfilled', '2026-08-01T09:00:00Z'),
     (3, 2, 'pending',   '2026-08-20T09:00:00Z'),
-    (2, 2, 'pending',   '2026-08-22T09:00:00Z');
+    (5, 2, 'pending',   '2026-08-22T09:00:00Z');
 
 -- The roster. STU001/STU002 match login users' `code` so slot assignments sync
 -- onto them; Alice already holds Lot 1 · A8.

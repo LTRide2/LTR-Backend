@@ -4,7 +4,7 @@ import os
 from flask import Blueprint, request, jsonify, current_app
 from werkzeug.utils import secure_filename
 
-from ..db import query, query_one, get_db
+from ..db import query, query_one, execute, get_db
 from ..auth import require_auth, require_role
 from .. import serialize
 
@@ -217,8 +217,9 @@ def upload_map(lot_id):
     uploaded.save(os.path.join(uploads_dir, filename))
 
     # Store an absolute URL so the SPA (served from another origin) can load it.
+    # Use execute (not query_one) so the UPDATE is committed, not rolled back.
     url = request.host_url.rstrip("/") + "/static/uploads/" + filename
-    row = query_one(
+    row = execute(
         "UPDATE lots SET map_image_url = %s WHERE id = %s "
         "RETURNING id, name, number, display_order, map_image_url", (url, lot_id))
     counts = query_one(

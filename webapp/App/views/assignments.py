@@ -158,7 +158,8 @@ def delete_assignment(space_id):
                 "UPDATE spaces SET status='available', assigned_user_id=NULL, "
                 "assigned_student_id=NULL WHERE id=%s", (space_id,))
             # Put the student's request back in the pending queue so they can be
-            # reassigned, and clear their roster slot.
+            # reassigned, and clear their roster slot. One-active-request-per-
+            # student (enforced at registration) guarantees no rival pending row.
             if freed_user_id is not None:
                 cursor.execute(
                     "UPDATE interest SET status='pending' "

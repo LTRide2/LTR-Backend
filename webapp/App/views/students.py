@@ -212,6 +212,16 @@ def import_students():
                         "INSERT INTO students (first, last, student_id, email, grade) "
                         "VALUES (%s, %s, %s, %s, %s)", (first, last, student_id, email, grade))
                     added += 1
+                # Provision the student's (non-admin) login account so an imported
+                # student can sign in with their student_id as their code. The
+                # users row holds only login identity (role, code, name); all
+                # student metadata lives in the students table. Upsert by code so
+                # re-importing the same student never duplicates the login.
+                cursor.execute(
+                    "INSERT INTO users (role, code, name) "
+                    "VALUES ('student', %s, %s) "
+                    "ON CONFLICT (code) DO UPDATE SET name=EXCLUDED.name",
+                    (student_id, f"{first} {last}"))
         connection.commit()
     except Exception:
         connection.rollback()

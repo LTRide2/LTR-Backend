@@ -172,8 +172,8 @@ check("re-submit (upsert) -> 200 still pending", status == 200 and payload["data
 status, payload = call("GET", "/api/interest/me", token=andrew_token)
 check("/interest/me -> single object", status == 200 and payload["data"] and payload["data"]["space_ids"] == [newpick], payload)
 status, payload = call("GET", "/api/interest?status=pending", token=admin)
-check("admin list pending -> names present (Bob, Alice, Andrew)",
-      status == 200 and {"Andrew", "Bob", "Alice"}.issubset({row["user_name"] for row in payload["data"]}), payload)
+check("admin list pending -> names present (Bob, Olivia, Andrew)",
+      status == 200 and {"Andrew", "Bob", "Olivia"}.issubset({row["user_name"] for row in payload["data"]}), payload)
 status, payload = call("GET", "/api/interest", token=andrew_token)
 check("student GET all interest -> 403", status == 403, payload)
 status, payload = call("DELETE", "/api/interest/me", token=andrew_token)
