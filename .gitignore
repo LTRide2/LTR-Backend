@@ -42,3 +42,25 @@
 
 # JetBrains IDE files
 .idea/
+
+# Python
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# local database files (if you ever use SQLite)
+*.sqlite3
+
+# dev server runtime files (webapp/bin/server)
+webapp/var/
+
+# secrets & local settings — NEVER commit these
+.env
+
+# the AWS key file (handled separately — do not touch the key itself)
+*.pem
+
+# build output / dependencies
+node_modules/
+dist/
